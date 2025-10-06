@@ -82,7 +82,7 @@ def contact(request):
         send_mail(
             subject="Повідомлення з сайту Falcon Optic",
             message=full_message,
-            from_email=f"Falcon Optic <{settings.DEFAULT_FROM_EMAIL}>",
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=['galatserega@gmail.com'],
             fail_silently=False,
         )
