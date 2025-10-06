@@ -1,0 +1,192 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load price_format %}
+{% block title %}{{ product.name }} — купити в Україні | Falcon Sytong Optics | огляд, ціни, характеристики {% endblock %}
+{% block meta_description %}Купити тепловізійний приціл {{ product.name }} — {{ product.short_description|truncatechars:160 }}. Доставка по Україні.{% endblock %}
+{% block og_title %}{{ product.name }} — Falcon Sytong Optics{% endblock %}
+{% block og_description %}{{ product.short_description|truncatechars:160 }}{% endblock %}
+{% block og_image %}{{ og_image_url }}{% endblock %}
+
+{% block extra_head %}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+  <style>
+    .full-image {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .buy-block {
+      background: #f9f9f9;
+      padding: 20px;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 40px;
+    }
+  </style>
+  {{ block.super }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "{{ product.name|escapejs }}",
+    "image": [
+  {% if product.image %}
+    "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"{% if product.gallery.all %},{% endif %}
+  {% endif %}
+  {% for img in product.gallery.all %}
+    "{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% if not forloop.last %},{% endif %}
+  {% endfor %}
+],
+    "description": "{{ product.full_description|striptags|truncatechars:300|escapejs }}",
+    "offers": {
+  "@type": "Offer",
+  "url": "{{ request.build_absolute_uri }}",
+  "priceCurrency": "UAH",
+  "price": "{{ product.price|schema_price }}",
+  "availability": "https://schema.org/InStock",
+  "hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "UA",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": {{ product.return_days|default:"14" }},
+    "returnMethod": "https://schema.org/ReturnByMail",
+    "returnFees": "https://schema.org/FreeReturn"
+  },
+  "shippingDetails": {
+    "@type": "OfferShippingDetails",
+    "shippingDestination": {
+      "@type": "DefinedRegion",
+      "addressCountry": "UA"
+    },
+    "shippingRate": {
+      "@type": "MonetaryAmount",
+      "value": "{{ product.shipping_price|default:'0.00' }}",
+      "currency": "UAH"
+    },
+    "deliveryTime": {
+      "@type": "ShippingDeliveryTime",
+      "handlingTime": {
+        "@type": "QuantitativeValue",
+        "minValue": {{ product.handling_days_min|default:"1" }},
+        "maxValue": {{ product.handling_days_max|default:"3" }},
+        "unitCode": "d"
+      },
+      "transitTime": {
+        "@type": "QuantitativeValue",
+        "minValue": {{ product.transit_days_min|default:"3" }},
+        "maxValue": {{ product.transit_days_max|default:"7" }},
+        "unitCode": "d"
+      }
+    }
+  }
+}
+
+  }
+  </script>
+{% endblock %}
+
+{% block content %}
+<div class="container px-0" itemscope itemtype="https://schema.org/Product">
+
+  {% if product.image %}
+    <figure itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+      <meta itemprop="url" content="{{ product.image.url }}">
+      <a href="{{ product.image.url }}" data-lightbox="product-gallery">
+        <img src="{{ product.image.url }}" class="full-image" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy">
+      </a>
+    </figure>
+  {% endif %}
+
+  <section class="container-fluid bg-dark text-white py-5">
+    <div class="container">
+      <h1 class="mb-3" itemprop="name">{{ product.name }}</h1>
+      <p class="text-warning mb-2 h4" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+  <meta itemprop="priceCurrency" content="UAH">
+  <meta itemprop="availability" content="https://schema.org/InStock" />
+  <meta itemprop="price" content="{{ product.price|schema_price }}">
+  <span class="price-human">{{ product.price|spaced_price }} грн</span>
+
+  <!-- Політика повернення -->
+  <div itemprop="hasMerchantReturnPolicy" itemscope itemtype="https://schema.org/MerchantReturnPolicy">
+    <meta itemprop="applicableCountry" content="UA" />
+    <meta itemprop="returnPolicyCategory" content="https://schema.org/MerchantReturnFiniteReturnWindow" />
+    <meta itemprop="merchantReturnDays" content="14" />
+    <meta itemprop="returnMethod" content="https://schema.org/ReturnByMail" />
+    <meta itemprop="returnFees" content="https://schema.org/FreeReturn" />
+  </div>
+
+  <!-- Деталі доставки -->
+  <div itemprop="shippingDetails" itemscope itemtype="https://schema.org/OfferShippingDetails">
+    <div itemprop="shippingDestination" itemscope itemtype="https://schema.org/DefinedRegion">
+      <meta itemprop="addressCountry" content="UA" />
+    </div>
+    <div itemprop="shippingRate" itemscope itemtype="https://schema.org/MonetaryAmount">
+      <meta itemprop="value" content="0" />
+      <meta itemprop="currency" content="UAH" />
+    </div>
+    <div itemprop="deliveryTime" itemscope itemtype="https://schema.org/ShippingDeliveryTime">
+      <div itemprop="handlingTime" itemscope itemtype="https://schema.org/QuantitativeValue">
+        <meta itemprop="minValue" content="1" />
+        <meta itemprop="maxValue" content="2" />
+        <meta itemprop="unitCode" content="d" />
+      </div>
+      <div itemprop="transitTime" itemscope itemtype="https://schema.org/QuantitativeValue">
+        <meta itemprop="minValue" content="1" />
+        <meta itemprop="maxValue" content="3" />
+        <meta itemprop="unitCode" content="d" />
+      </div>
+    </div>
+  </div>
+</p>
+
+      <p class="text-muted">{{ product.category.name }}</p>
+      <a href="{% url 'cart:cart_add' product.id %}?next={{ request.path }}" class="btn btn-warning btn-lg">В кошик</a>
+    </div>
+  </section>
+
+  {% if product.video %}
+    <section class="container mb-4" itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
+      <meta itemprop="contentUrl" content="{{ product.video.url }}">
+      <div class="ratio ratio-16x9 mb-3">
+        <video controls preload="metadata" title="Відеоогляд: {{ product.name }}">
+          <source src="{{ product.video.url }}" type="video/mp4">
+          Ваш браузер не підтримує відео.
+        </video>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if product.gallery.all %}
+    <section class="container mb-4">
+      {% for img in product.gallery.all %}
+        <figure itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+          <meta itemprop="url" content="{{ img.image.url }}">
+          <a href="{{ img.image.url }}" data-lightbox="product-gallery">
+            <img src="{{ img.image.url }}" class="full-image" alt="Фото {{ forloop.counter }} — {{ product.name }}" title="{{ product.name }} з різних ракурсів" loading="lazy">
+          </a>
+        </figure>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <article class="container py-5">
+    <div class="mb-5" itemprop="description">
+      {{ product.full_description|linebreaks }}
+    </div>
+  </article>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+   <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (window.lightbox) {
+          lightbox.option({
+            resizeDuration: 200,
+            wrapAround: true
+          });
+        }
+      });
+    </script>
+  {% endblock %}

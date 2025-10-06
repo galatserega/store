@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+{% block title %}Контакти — Falcon Optics{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Зв'язатися з нами</h2>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.name.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.message.label_tag }}
+        {{ form.message }}
+        {{ form.message.errors }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.captcha.label_tag }}
+        {{ form.captcha }}
+        {{ form.captcha.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Надіслати</button>
+</form>
+
+<section class="mt-5">
+  <h3>Або зв'яжіться з нами через месенджери:</h3>
+  <div class="d-flex gap-3 mt-3 flex-wrap">
+    <a href="https://t.me/Falconoptic" target="_blank" class="btn text-white" style="background-color:#0088cc;">Telegram</a>
+    <a href="viber://chat?number=%2B380660911223" target="_blank" class="btn text-white" style="background-color:#665CAC;">Viber</a>
+    <a href="https://wa.me/380660911223" target="_blank" class="btn text-white" style="background-color:#25D366;">WhatsApp</a>
+    <a href="https://signal.me/#p/Falconoptics.95" target="_blank" class="btn text-white" style="background-color:#3A76F0;">Signal</a>
+  </div>
+</section>
+
+{% if success %}
+<div class="alert alert-success mt-3" role="alert">
+    Дякуємо! Ваше повідомлення надіслано.
+</div>
+{% endif %}
+
+{% endblock %}

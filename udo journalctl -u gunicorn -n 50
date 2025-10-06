@@ -1,0 +1,20 @@
+[0;1;31m×[0m gunicorn.service - gunicorn daemon for falcone_clone
+     Loaded: loaded (]8;;file://vps71960.hyperhost.name/etc/systemd/system/gunicorn.service/etc/systemd/system/gunicorn.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Fri 2025-10-03 10:35:39 EEST; 2s ago
+   Duration: 1.129s
+    Process: 7209 ExecStartPre=/bin/mkdir -p /run/falcon_prod (code=exited, status=0/SUCCESS)
+    Process: 7211 ExecStartPre=/bin/chown root:www-data /run/falcon_prod (code=exited, status=0/SUCCESS)
+    Process: 7213 ExecStartPre=/bin/chmod 770 /run/falcon_prod (code=exited, status=0/SUCCESS)
+    Process: 7215 ExecStart=/root/site/falcon_prod/venv/bin/gunicorn falcone_clone.wsgi:application --workers 3 --bind unix:/run/falcon_prod/falcon.sock --umask 007 [0;1;31m(code=exited, status=3)[0m
+   Main PID: 7215 (code=exited, status=3)
+
+жов 02 10:52:15 vps71960.hyperhost.name gunicorn[367]: django.urls.exceptions.NoReverseMatch: Reverse for 'login' not found. 'login' is not a valid view function or pattern name.
+жов 02 11:29:21 vps71960.hyperhost.name gunicorn[364]: Not Found: /cgi-bin/luci/;stok=/locale
+жов 02 13:12:31 vps71960.hyperhost.name systemd[1]: Stopping gunicorn.service - gunicorn daemon for falcone_clone...
+жов 02 13:12:31 vps71960.hyperhost.name gunicorn[321]: [2025-10-02 13:12:31 +0300] [321] [INFO] Handling signal: term
+жов 02 13:12:31 vps71960.hyperhost.name gunicorn[364]: [2025-10-02 10:12:31 +0000] [364] [INFO] Worker exiting (pid: 364)
+жов 02 13:12:31 vps71960.hyperhost.name gunicorn[367]: [2025-10-02 10:12:31 +0000] [367] [INFO] Worker exiting (pid: 367)
+жов 02 13:12:31 vps71960.hyperhost.name gunicorn[368]: [2025-10-02 10:12:31 +0000] [368] [INFO] Worker exiting (pid: 368)
+жов 02 13:12:33 vps71960.hyperhost.name gunicorn[321]: [2025-10-02 13:12:33 +0300] [321] [INFO] Shutting down: Master
+жов 02 13:12:33 vps71960.hyperhost.name systemd[1]: gunicorn.service: Deactivated successfully.
+жов 02 13:12:33 vps71960.hyperhost.name systemd[1]: Stopped gunicorn.service - gunicorn daemon for falcone_clone.

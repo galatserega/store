@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page { size: A4; margin: 20mm; }
+
+    @font-face {
+      font-family: "DejaVu Sans";
+      src: url("{% static 'fonts/DejaVuSans.ttf' %}") format("truetype");
+      font-weight: normal;
+    }
+    @font-face {
+      font-family: "DejaVu Sans";
+      src: url("{% static 'fonts/DejaVuSans-Bold.ttf' %}") format("truetype");
+      font-weight: bold;
+    }
+
+    body {
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 14px;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2, h3 { text-align: center; margin: 10px 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 6px;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    th { background-color: #f2f2f2; }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .logo-container img {
+      height: 50px;
+      vertical-align: middle;
+    }
+
+    .logo-container span {
+      font-size: 20px;
+      font-weight: bold;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div style="display:flex; align-items:center; justify-content:center; background-color:gray; padding:10px; margin-bottom:20px;">
+    <img src="data:image/png;base64,{{ logo_b64 }}" alt="Falcon Logo" style="height:50px; margin-right:12px;">
+    <span style="font-size:20px; font-weight:bold; font-family:Arial, sans-serif; display:block; text-align:center;">
+        FalconOptics
+    </span>
+</div>
+
+<h2>ГАРАНТІЙНИЙ ТАЛОН №{{ order.id }}</h2>
+
+<p><strong>Продавець:</strong> ФОП "Галат В.В."</p>
+<p><strong>Покупець:</strong> {{ order.name }} ({{ order.phone }})</p>
+<p><strong>Email:</strong> {{ order.email }}</p>
+<p><strong>Дата продажу:</strong> {{ order.created_at|date:"d.m.Y" }}</p>
+
+<h3>Товари</h3>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:left;">Товар</th>
+      <th>Серійний номер</th>
+      <th>Гарантія</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in order.items.all %}
+    <tr>
+      <td style="text-align:left;">{{ item.product.name }}</td>
+      <td>{{ item.product.serial_number|default:"-> " }}</td>
+      <td>{{ item.product.warranty_months }} міс.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Гарантійні зобов'язання</h3>
+<p>Гарантійне обслуговування надається протягом зазначеного терміну за умови дотримання правил експлуатації та збереження документів, що підтверджують покупку.</p>
+<p>Гарантія не поширюється на пошкодження, спричинені неправильним використанням, механічними ушкодженнями, стихійними лихами чи несанкціонованим ремонтом.</p>
+<p>Для збереження гарантії покупець зобов’язаний надати:<br>
+ - гарантійний талон;<br>
+ - документ, що підтверджує оплату;<br>
+ - товар у повній комплектації та оригінальній упаковці.</p>
+<p>Обмін або повернення товару належної якості здійснюється протягом 14 днів.</p>
+<p><strong>Контактні дані сервісного центру:</strong><br>
+ Телефон: 066-09-11-223<br>
+ Графік роботи: Пн–Пт 10:00–16:00</p>
+
+</body>
+</html>

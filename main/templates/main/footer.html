@@ -1,0 +1,63 @@
+{% load static %}
+
+<footer class="bg-dark text-light py-4 mt-5">
+  <div class="container">
+    <div class="row text-center text-md-start align-items-start">
+
+      <!-- Лівий блок — опис бренду -->
+      <div class="col-md-4 mb-4 mb-md-0">
+        <a href="{% url 'home' %}" class="d-inline-block mb-2">
+          <img src="{% static 'img/logo.png' %}" alt="Falcon Optic" style="height: 40px;">
+        </a>
+        <p class="small mb-0">
+          Falcon Optics — сучасна оптика для полювання, точність і якість, яким можна довіряти.
+        </p>
+      </div>
+
+      <!-- Центр — соцмережі -->
+            <div class="col-md-4 d-flex flex-column justify-content-end align-items-center text-center">
+        <div>
+          <h3>Слідкуйте за нами</h3>
+          <div class="mb-2">
+            <a href="https://t.me/falconopt" target="_blank" rel="noopener noreferrer" class="text-light me-3 fs-5" aria-label="Telegram">
+              <i class="fab fa-telegram-plane"></i>
+            </a>
+            <a href="https://www.facebook.com/share/g/1AP4Bzt4Ww/" target="_blank" rel="noopener noreferrer" class="text-light me-3 fs-5" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/falcon_sytong_optics" class="text-light fs-5" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.youtube.com/@galatserega-bb6dm" class="text-light fs-5" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-youtube ms-3 fs-5"></i>
+            </a>
+            <a href="https://www.tiktok.com/@falconoptics.com.ua" class="text-light fs-5" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-tiktok ms-3 fs-5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Правий блок — контакти та посилання -->
+    <div class="col-md-4 d-flex justify-content-end">
+      <div class="text-start">
+        <div class="small mb-3">
+          <a href="/products/?category=teplovizijni-priladi" class="text-light text-decoration-none d-block mb-2">Тепловізійні прилади</a>
+          <a href="/products/?category=nichna-optika" class="text-light text-decoration-none d-block mb-2">Нічна оптика</a>
+          <a href="/products/?category=aksesuari" class="text-light text-decoration-none d-block mb-2">Аксесуари</a>
+        </div>
+
+        <p class="small mb-1">Тел: <a href="tel:0660911223" class="text-light text-decoration-none">+38 (066) 09-11-223</a></p>
+        <p class="small mb-1">Email: <a href="mailto:galatserega@gmail.com" class="text-light text-decoration-none">info@falconoptics.com.ua</a></p>
+        <p class="small mb-1" class="text-light text-decoration-none">Пн–Пт: 09:00–18:00</p>
+      </div>
+    </div>
+
+    <hr class="border-light mt-4" />
+
+    <div class="text-center small mt-3">
+      &copy; 2025 Falcon Optics. Всі права захищені.
+    </div>
+  </div>
+</footer>
