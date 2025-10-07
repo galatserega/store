@@ -68,13 +68,14 @@
     </span>
 </div>
 
-<h2>ВИДАТКОВА НАКЛАДНА №{{ order.id }}</h2>
+<h2><strong>ВИДАТКОВА НАКЛАДНА №{{ order.id }}</strong></h2>
 
-<p><strong>Дата:</strong> {{ order.created_at|date:"d.m.Y" }}</p>
-<p><strong>Продавець:</strong> ФОП "Галат В.В."</p>
-<p><strong>Покупець:</strong> {{ order.name }}</p>
-<p><strong>Телефон:</strong> {{ order.phone }}</p>
-<p><strong>Email:</strong> {{ order.email }}</p>
+<p><strong style="text-decoration: underline;">Дата:</strong> {{ order.created_at|date:"d.m.Y" }}</p>
+<p><strong style="text-decoration: underline;">Постачальник:</strong> ІНТЕРНЕТ-МАГАЗИН "ФАЛЬКОНОПТІКС"</p>
+<p><strong style="text-decoration: underline;">Телефон:</strong> {{ order.phone }}</p>
+<p><strong style="text-decoration: underline;">Адреса:</strong> Україна, м.Київ, вул.Вікентія Хвойки 21</p>
+<p><strong style="text-decoration: underline;">Email:</strong> {{ order.email }}</p>
+<p><strong style="text-decoration: underline;">Покупець:</strong> {{ order.name }}</p>
 
 <h3>Товари</h3>
 <table>
