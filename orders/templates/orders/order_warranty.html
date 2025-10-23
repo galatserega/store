@@ -88,7 +88,7 @@
     {% for item in order.items.all %}
     <tr>
       <td style="text-align:left;">{{ item.product.name }}</td>
-      <td>{{ item.product.serial_number|default:"-> " }}</td>
+      <td>{{ item.product.serial_number|default:" " }}</td>
       <td>{{ item.product.warranty_months }} міс.</td>
     </tr>
     {% endfor %}
