@@ -1,9 +1,64 @@
 {% extends 'main/base.html' %}
 {% load static %}
-{% block title %}Falcon Optics{% endblock %}
-{% block meta_description %}Falcon Optic — точність, якість, підтримка.{% endblock %}
-{% block og_title %}Falcon Optic — Головна{% endblock %}
+
+{% block title %}FalconOptics — Тепловізійні приціли Sytong та Falcon{% endblock %}
+{% block meta_description %}Магазин FalconOptics — тепловізійні приціли Sytong та Falcon, гарантія, доставка по Україні, професійні консультації.{% endblock %}
+{% block og_title %}FalconOptics — Тепловізійні приціли Sytong та Falcon{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="https://falconoptics.com.ua/">
+
+<meta name="description" content="Магазин FalconOptics — тепловізійні приціли Sytong та Falcon, гарантія, доставка по Україні, професійні консультації.">
+
+<meta property="og:title" content="FalconOptics — Тепловізійні приціли Sytong та Falcon">
+<meta property="og:description" content="Магазин тепловізійної оптики FalconOptics. Гарантія та доставка по Україні.">
+<meta property="og:image" content="https://falconoptics.com.ua/static/img/og-main.webp">
+<meta property="og:url" content="https://falconoptics.com.ua/">
+<meta property="og:type" content="website">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": "https://falconoptics.com.ua/",
+  "name": "FalconOptics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://falconoptics.com.ua/search/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FalconOptics",
+  "url": "https://falconoptics.com.ua/",
+  "logo": "https://falconoptics.com.ua/static/img/logo.png"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Головна",
+      "item": "https://falconoptics.com.ua/"
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+
 {% block content %}
+
 
 <!-- Головний слайдер -->
 <div id="mainSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
