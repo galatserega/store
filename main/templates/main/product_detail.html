@@ -5,7 +5,7 @@
 {% block meta_description %}Купити тепловізійний приціл {{ product.name }} — {{ product.short_description|truncatechars:160 }}. Доставка по Україні.{% endblock %}
 {% block og_title %}{{ product.name }} — Falcon, Sytong, NNPO Optics{% endblock %}
 {% block og_description %}{{ product.short_description|truncatechars:160 }}{% endblock %}
-{% block og_image %}{{ og_image_url }}{% endblock %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% endblock %}
 
 {% block extra_head %}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
@@ -35,61 +35,62 @@
   </style>
   {{ block.super }}
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": "{{ product.name|escapejs }}",
-    "image": [
-  "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"{% for img in product.gallery.all|dictsort:"id" %},
-  "{{ request.scheme }}://{{ request.get_host }}{{ img.image.url }}"{% endfor %}
-],
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name|escapejs }}",
+  "brand": {
+  "@type": "Brand",
+  "name": "Sytong / Falcon /  NNPO"
+},
 
-    "description": "{{ product.full_description|striptags|truncatechars:300|escapejs }}",
-    "offers": {
-  "@type": "Offer",
-  "url": "{{ request.build_absolute_uri }}",
-  "priceCurrency": "UAH",
-  "price": "{{ product.price|schema_price }}",
-  "availability": "https://schema.org/InStock",
-  "hasMerchantReturnPolicy": {
-    "@type": "MerchantReturnPolicy",
-    "applicableCountry": "UA",
-    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-    "merchantReturnDays": {{ product.return_days|default:"14" }},
-    "returnMethod": "https://schema.org/ReturnByMail",
-    "returnFees": "https://schema.org/FreeReturn"
-  },
-  "shippingDetails": {
-    "@type": "OfferShippingDetails",
-    "shippingDestination": {
-      "@type": "DefinedRegion",
-      "addressCountry": "UA"
+  "image": "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}",
+  "description": "{{ product.full_description|striptags|truncatechars:300|escapejs }}",
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "UAH",
+    "price": "{{ product.price|schema_price }}",
+    "availability": "https://schema.org/InStock",
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "UA",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": {{ product.return_days|default:"14" }},
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "https://schema.org/FreeReturn"
     },
-    "shippingRate": {
-      "@type": "MonetaryAmount",
-      "value": "{{ product.shipping_price|default:'0.00' }}",
-      "currency": "UAH"
-    },
-    "deliveryTime": {
-      "@type": "ShippingDeliveryTime",
-      "handlingTime": {
-        "@type": "QuantitativeValue",
-        "minValue": {{ product.handling_days_min|default:"1" }},
-        "maxValue": {{ product.handling_days_max|default:"3" }},
-        "unitCode": "d"
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "UA"
       },
-      "transitTime": {
-        "@type": "QuantitativeValue",
-        "minValue": {{ product.transit_days_min|default:"3" }},
-        "maxValue": {{ product.transit_days_max|default:"7" }},
-        "unitCode": "d"
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "{{ product.shipping_price|default:'0.00' }}",
+        "currency": "UAH"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": {{ product.handling_days_min|default:"1" }},
+          "maxValue": {{ product.handling_days_max|default:"3" }},
+          "unitCode": "d"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": {{ product.transit_days_min|default:"3" }},
+          "maxValue": {{ product.transit_days_max|default:"7" }},
+          "unitCode": "d"
+        }
       }
     }
   }
 }
+</script>
 
-  }
-  </script>
 {% endblock %}
 
 {% block content %}
