@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
@@ -22,6 +23,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='products/')
     video = models.FileField(upload_to='products/videos/', blank=True, null=True)
+    youtube_url = models.URLField("YouTube посилання", blank=True)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,8 +33,6 @@ class Product(models.Model):
     warranty_months = models.PositiveIntegerField(
         "Гарантія (24 міс.)", default=24
     )
-
-    slug = models.SlugField()
 
     def __str__(self):
         return self.name
@@ -48,7 +48,6 @@ class Product(models.Model):
     @property
     def description(self):
         return self.full_description
-
 
 
 class Review(models.Model):

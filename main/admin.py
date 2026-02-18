@@ -31,7 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
     fields = ('category', 'name', 'slug', 'short_description', 'price',
-              'full_description', 'image', 'video', 'created_at')
+              'full_description', 'image', 'video', 'youtube_url', 'created_at')
     readonly_fields = ('created_at',)
 
 
@@ -52,4 +52,3 @@ class SliderAdmin(admin.ModelAdmin):
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question',)
     search_fields = ('question', 'answer')
-    
