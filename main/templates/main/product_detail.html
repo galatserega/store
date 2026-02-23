@@ -2,96 +2,61 @@
 {% load static %}
 {% load price_format %}
 {% load youtube %}
-{% block title %}{{ product.name }} — купити в Україні | Falcon Sytong Optics | NNPO | огляд, ціни, характеристики {% endblock %}
+
+{% block title %}{{ product.name }} — купити в Україні | Falcon Sytong Optics | огляд, ціни, характеристики{% endblock %}
 {% block meta_description %}Купити тепловізійний приціл {{ product.name }} — {{ product.short_description|truncatechars:160 }}. Доставка по Україні.{% endblock %}
-{% block og_title %}{{ product.name }} — Falcon, Sytong, NNPO Optics{% endblock %}
+
+{% block og_title %}{{ product.name }}{% endblock %}
 {% block og_description %}{{ product.short_description|truncatechars:160 }}{% endblock %}
+{% block og_type %}product{% endblock %}
 {% block og_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% endblock %}
 
 {% block extra_head %}
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
-  <meta property="og:title" content="{{ product.name }}">
-  <meta property="og:description" content="{{ product.short_description|truncatechars:160 }}">
-  <meta property="og:type" content="product">
-  <meta property="og:url" content="{{ request.build_absolute_uri }}">
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}">
-  <meta property="og:image:secure_url" content="{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}">
-  <meta property="og:image:alt" content="{{ product.name }}">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <style>
-    .full-image {
-      width: 100%;
-      height: auto;
-      margin-bottom: 20px;
-    }
-    .buy-block {
-      background: #f9f9f9;
-      padding: 20px;
-      border-top: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
-      margin-bottom: 40px;
-    }
-  </style>
-  {{ block.super }}
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "{{ product.name|escapejs }}",
-  "brand": {
-  "@type": "Brand",
-  "name": "Sytong / Falcon /  NNPO"
-},
+  {# Якщо base.html already рендерить OG через блоки — тут дублювати не треба. #}
 
-  "image": "{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}",
-  "description": "{{ product.full_description|striptags|truncatechars:300|escapejs }}",
-  "offers": {
-    "@type": "Offer",
-    "url": "{{ request.build_absolute_uri }}",
-    "priceCurrency": "UAH",
-    "price": "{{ product.price|schema_price }}",
-    "availability": "https://schema.org/InStock",
-    "hasMerchantReturnPolicy": {
-      "@type": "MerchantReturnPolicy",
-      "applicableCountry": "UA",
-      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-      "merchantReturnDays": {{ product.return_days|default:"14" }},
-      "returnMethod": "https://schema.org/ReturnByMail",
-      "returnFees": "https://schema.org/FreeReturn"
-    },
-    "shippingDetails": {
-      "@type": "OfferShippingDetails",
-      "shippingDestination": {
-        "@type": "DefinedRegion",
-        "addressCountry": "UA"
-      },
-      "shippingRate": {
-        "@type": "MonetaryAmount",
-        "value": "{{ product.shipping_price|default:'0.00' }}",
-        "currency": "UAH"
-      },
-      "deliveryTime": {
-        "@type": "ShippingDeliveryTime",
-        "handlingTime": {
-          "@type": "QuantitativeValue",
-          "minValue": {{ product.handling_days_min|default:"1" }},
-          "maxValue": {{ product.handling_days_max|default:"3" }},
-          "unitCode": "d"
-        },
-        "transitTime": {
-          "@type": "QuantitativeValue",
-          "minValue": {{ product.transit_days_min|default:"3" }},
-          "maxValue": {{ product.transit_days_max|default:"7" }},
-          "unitCode": "d"
-        }
-      }
+  <style>
+    .full-image { width: 100%; height: auto; margin-bottom: 20px; }
+    .buy-block { background: #f9f9f9; padding: 20px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin-bottom: 40px; }
+  </style>
+
+  {{ block.super }}
+
+  {# Product JSON-LD #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.name|escapejs }}",
+    "brand": { "@type": "Brand", "name": "Sytong / Falcon" },
+    "image": ["{{ request.build_absolute_uri(product.image.url) }}"],
+    "description": "{{ product.full_description|default:product.short_description|striptags|truncatechars:300|escapejs }}",
+    "offers": {
+      "@type": "Offer",
+      "url": "{{ request.build_absolute_uri }}",
+      "priceCurrency": "UAH",
+      "price": "{{ product.price|schema_price }}",
+      "availability": "https://schema.org/InStock"
     }
   }
-}
-</script>
+  </script>
 
+  {# VideoObject JSON-LD (тільки якщо є валідний YouTube ID) #}
+  {% with yid=product.youtube_url|youtube_id %}
+    {% if yid %}
+      <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"VideoObject",
+        "name":"{{ product.name|escapejs }} — відеоогляд",
+        "description":"{{ product.short_description|default:product.full_description|striptags|truncatechars:200|escapejs }}",
+        "thumbnailUrl":["https://img.youtube.com/vi/{{ yid }}/hqdefault.jpg"],
+        "uploadDate":"{{ product.created_at|date:'c' }}",
+        "embedUrl":"https://www.youtube-nocookie.com/embed/{{ yid }}",
+        "contentUrl":"https://www.youtube.com/watch?v={{ yid }}"
+      }
+      </script>
+    {% endif %}
+  {% endwith %}
 {% endblock %}
 
 {% block content %}
@@ -109,70 +74,37 @@
   <section class="container-fluid bg-dark text-white py-5">
     <div class="container">
       <h1 class="mb-3" itemprop="name">{{ product.name }}</h1>
-      <p class="text-warning mb-2 h4" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-  <meta itemprop="priceCurrency" content="UAH">
-  <meta itemprop="availability" content="https://schema.org/InStock" />
-  <meta itemprop="price" content="{{ product.price|schema_price }}">
-  <span class="price-human">{{ product.price|spaced_price }} грн</span>
 
-  <!-- Політика повернення -->
-  <div itemprop="hasMerchantReturnPolicy" itemscope itemtype="https://schema.org/MerchantReturnPolicy">
-    <meta itemprop="applicableCountry" content="UA" />
-    <meta itemprop="returnPolicyCategory" content="https://schema.org/MerchantReturnFiniteReturnWindow" />
-    <meta itemprop="merchantReturnDays" content="14" />
-    <meta itemprop="returnMethod" content="https://schema.org/ReturnByMail" />
-    <meta itemprop="returnFees" content="https://schema.org/FreeReturn" />
-  </div>
+      <p class="text-warning mb-2 h4">
+        <span class="price-human">{{ product.price|spaced_price }} грн</span>
+      </p>
 
-  <!-- Деталі доставки -->
-  <div itemprop="shippingDetails" itemscope itemtype="https://schema.org/OfferShippingDetails">
-    <div itemprop="shippingDestination" itemscope itemtype="https://schema.org/DefinedRegion">
-      <meta itemprop="addressCountry" content="UA" />
-    </div>
-    <div itemprop="shippingRate" itemscope itemtype="https://schema.org/MonetaryAmount">
-      <meta itemprop="value" content="0" />
-      <meta itemprop="currency" content="UAH" />
-    </div>
-    <div itemprop="deliveryTime" itemscope itemtype="https://schema.org/ShippingDeliveryTime">
-      <div itemprop="handlingTime" itemscope itemtype="https://schema.org/QuantitativeValue">
-        <meta itemprop="minValue" content="1" />
-        <meta itemprop="maxValue" content="2" />
-        <meta itemprop="unitCode" content="d" />
-      </div>
-      <div itemprop="transitTime" itemscope itemtype="https://schema.org/QuantitativeValue">
-        <meta itemprop="minValue" content="1" />
-        <meta itemprop="maxValue" content="3" />
-        <meta itemprop="unitCode" content="d" />
-      </div>
-    </div>
-  </div>
-</p>
+      {% if product.category %}
+        <p class="text-muted">{{ product.category.name }}</p>
+      {% endif %}
 
-      <p class="text-muted">{{ product.category.name }}</p>
       <a href="{% url 'cart:cart_add' product.id %}?next={{ request.path }}" class="btn btn-warning btn-lg">В кошик</a>
     </div>
   </section>
 
+  {# Відео: тільки HTML, без VideoObject microdata (бо є JSON-LD) #}
   {% if product.youtube_url %}
-  <section class="container mb-4" itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
-    <meta itemprop="embedUrl" content="{{ product.youtube_url }}">
-    {{ product.youtube_url|youtube_iframe }}
-    <a href="{{ product.youtube_url }}" target="_blank" rel="nofollow noopener" class="text-muted">
-      Відкрити на YouTube
-    </a>
-  </section>
-{% elif product.video %}
-  <section class="container mb-4" itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
-    <meta itemprop="contentUrl" content="{{ product.video.url }}">
-    <div class="ratio ratio-16x9 mb-3">
-      <video controls preload="metadata" title="Відеоогляд: {{ product.name }}">
-        <source src="{{ product.video.url }}" type="video/mp4">
-        Ваш браузер не підтримує відео.
-      </video>
-    </div>
-  </section>
-{% endif %}
-
+    <section class="container mb-4">
+      {{ product.youtube_url|youtube_iframe }}
+      <a href="{{ product.youtube_url }}" target="_blank" rel="nofollow noopener" class="text-muted">
+        Відкрити на YouTube
+      </a>
+    </section>
+  {% elif product.video %}
+    <section class="container mb-4">
+      <div class="ratio ratio-16x9 mb-3">
+        <video controls preload="metadata" title="Відеоогляд: {{ product.name }}">
+          <source src="{{ product.video.url }}" type="video/mp4">
+          Ваш браузер не підтримує відео.
+        </video>
+      </div>
+    </section>
+  {% endif %}
 
   {% if product.gallery.all %}
     <section class="container mb-4">
@@ -197,14 +129,11 @@
 {% endblock %}
 
 {% block extra_scripts %}
-   <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        if (window.lightbox) {
-          lightbox.option({
-            resizeDuration: 200,
-            wrapAround: true
-          });
-        }
-      });
-    </script>
-  {% endblock %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (window.lightbox) {
+      lightbox.option({ resizeDuration: 200, wrapAround: true });
+    }
+  });
+</script>
+{% endblock %}

@@ -9,18 +9,27 @@ def _youtube_id(url: str) -> str | None:
     try:
         u = urlparse(url)
         host = (u.netloc or "").lower()
+        path = u.path or ""
 
         if "youtu.be" in host:
-            return u.path.strip("/").split("/")[0] or None
+            return path.strip("/").split("/")[0] or None
 
         if "youtube.com" in host or "youtube-nocookie.com" in host:
-            if u.path.startswith("/embed/"):
-                return u.path.split("/embed/")[1].split("/")[0] or None
+            if path.startswith("/embed/"):
+                return path.split("/embed/")[1].split("/")[0] or None
+            if path.startswith("/shorts/"):
+                return path.split("/shorts/")[1].split("/")[0] or None
+
             qs = parse_qs(u.query)
             return (qs.get("v", [None])[0]) or None
     except Exception:
         return None
     return None
+
+
+@register.filter
+def youtube_id(url: str) -> str:
+    return _youtube_id(url or "") or ""
 
 
 @register.filter
