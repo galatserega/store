@@ -13,12 +13,11 @@
 {# Абсолютний OG image для продукту #}
 {% block og_image %}
   {% if product.image %}
-    {{ request.build_absolute_uri(product.image.url) }}
+    {{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}
   {% else %}
     {{ request.scheme }}://{{ request.get_host }}{% static 'img/default-og.jpg' %}
   {% endif %}
 {% endblock %}
-
 {% block extra_head %}
   <style>
     .full-image { width: 100%; height: auto; margin-bottom: 20px; }
@@ -35,7 +34,7 @@
     "name": "{{ product.name|escapejs }}",
     "brand": { "@type": "Brand", "name": "Sytong / Falcon" },
     {% if product.image %}
-    "image": ["{{ request.build_absolute_uri(product.image.url) }}"],
+    "image": ["{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}"],
     {% endif %}
     "description": "{{ product.full_description|default:product.short_description|striptags|truncatechars:300|escapejs }}",
     "offers": {
