@@ -11,9 +11,7 @@
 {% block og_type %}product{% endblock %}
 
 {# Абсолютний OG image для продукту #}
-{% block og_image %}
-  {% if product.image %}
-    {{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}
+{% block og_image %}{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}
   {% else %}
     {{ request.scheme }}://{{ request.get_host }}{% static 'img/default-og.jpg' %}
   {% endif %}
