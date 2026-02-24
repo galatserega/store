@@ -1,8 +1,20 @@
 from urllib.parse import urlparse, parse_qs
+import re
 from django import template
 from django.utils.safestring import mark_safe
 
 register = template.Library()
+
+_YT_ID_RE = re.compile(r"^[A-Za-z0-9_-]{6,20}$")
+
+
+def _clean_youtube_id(value: str | None) -> str | None:
+    if not value:
+        return None
+    value = value.strip()
+    if _YT_ID_RE.match(value):
+        return value
+    return None
 
 
 def _youtube_id(url: str) -> str | None:
@@ -11,17 +23,21 @@ def _youtube_id(url: str) -> str | None:
         host = (u.netloc or "").lower()
         path = u.path or ""
 
+        # youtu.be/<id>
         if "youtu.be" in host:
-            return path.strip("/").split("/")[0] or None
+            return _clean_youtube_id(path.strip("/").split("/")[0] or None)
 
+        # youtube.com / youtube-nocookie.com
         if "youtube.com" in host or "youtube-nocookie.com" in host:
             if path.startswith("/embed/"):
-                return path.split("/embed/")[1].split("/")[0] or None
+                return _clean_youtube_id(path.split("/embed/")[1].split("/")[0] or None)
             if path.startswith("/shorts/"):
-                return path.split("/shorts/")[1].split("/")[0] or None
+                return _clean_youtube_id(path.split("/shorts/")[1].split("/")[0] or None)
+            if path.startswith("/live/"):
+                return _clean_youtube_id(path.split("/live/")[1].split("/")[0] or None)
 
             qs = parse_qs(u.query)
-            return (qs.get("v", [None])[0]) or None
+            return _clean_youtube_id((qs.get("v", [None])[0]) or None)
     except Exception:
         return None
     return None

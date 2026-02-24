@@ -9,11 +9,17 @@
 {% block og_title %}{{ product.name }}{% endblock %}
 {% block og_description %}{{ product.short_description|truncatechars:160 }}{% endblock %}
 {% block og_type %}product{% endblock %}
-{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% endblock %}
+
+{# Абсолютний OG image для продукту #}
+{% block og_image %}
+  {% if product.image %}
+    {{ request.build_absolute_uri(product.image.url) }}
+  {% else %}
+    {{ request.scheme }}://{{ request.get_host }}{% static 'img/default-og.jpg' %}
+  {% endif %}
+{% endblock %}
 
 {% block extra_head %}
-  {# Якщо base.html already рендерить OG через блоки — тут дублювати не треба. #}
-
   <style>
     .full-image { width: 100%; height: auto; margin-bottom: 20px; }
     .buy-block { background: #f9f9f9; padding: 20px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin-bottom: 40px; }
@@ -28,7 +34,9 @@
     "@type": "Product",
     "name": "{{ product.name|escapejs }}",
     "brand": { "@type": "Brand", "name": "Sytong / Falcon" },
+    {% if product.image %}
     "image": ["{{ request.build_absolute_uri(product.image.url) }}"],
+    {% endif %}
     "description": "{{ product.full_description|default:product.short_description|striptags|truncatechars:300|escapejs }}",
     "offers": {
       "@type": "Offer",
@@ -49,10 +57,11 @@
         "@type":"VideoObject",
         "name":"{{ product.name|escapejs }} — відеоогляд",
         "description":"{{ product.short_description|default:product.full_description|striptags|truncatechars:200|escapejs }}",
-        "thumbnailUrl":["https://img.youtube.com/vi/{{ yid }}/hqdefault.jpg"],
-        "uploadDate":"{{ product.created_at|date:'c' }}",
+        "thumbnailUrl":["https://i.ytimg.com/vi/{{ yid }}/hqdefault.jpg"],
+        "uploadDate":"{{ product.created_at|date:'Y-m-d' }}",
         "embedUrl":"https://www.youtube-nocookie.com/embed/{{ yid }}",
-        "contentUrl":"https://www.youtube.com/watch?v={{ yid }}"
+        "contentUrl":"https://www.youtube.com/watch?v={{ yid }}",
+        "url":"{{ request.build_absolute_uri }}"
       }
       </script>
     {% endif %}
@@ -87,24 +96,26 @@
     </div>
   </section>
 
-  {# Відео: тільки HTML, без VideoObject microdata (бо є JSON-LD) #}
-  {% if product.youtube_url %}
-    <section class="container mb-4">
-      {{ product.youtube_url|youtube_iframe }}
-      <a href="{{ product.youtube_url }}" target="_blank" rel="nofollow noopener" class="text-muted">
-        Відкрити на YouTube
-      </a>
-    </section>
-  {% elif product.video %}
-    <section class="container mb-4">
-      <div class="ratio ratio-16x9 mb-3">
-        <video controls preload="metadata" title="Відеоогляд: {{ product.name }}">
-          <source src="{{ product.video.url }}" type="video/mp4">
-          Ваш браузер не підтримує відео.
-        </video>
-      </div>
-    </section>
-  {% endif %}
+  {# Відео: показуємо тільки якщо є валідний yid, щоб не було розсинхрону з JSON-LD #}
+  {% with yid=product.youtube_url|youtube_id %}
+    {% if yid %}
+      <section class="container mb-4">
+        {{ product.youtube_url|youtube_iframe }}
+        <a href="https://www.youtube.com/watch?v={{ yid }}" target="_blank" rel="nofollow noopener" class="text-muted">
+          Відкрити на YouTube
+        </a>
+      </section>
+    {% elif product.video %}
+      <section class="container mb-4">
+        <div class="ratio ratio-16x9 mb-3">
+          <video controls preload="metadata" title="Відеоогляд: {{ product.name }}">
+            <source src="{{ product.video.url }}" type="video/mp4">
+            Ваш браузер не підтримує відео.
+          </video>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
 
   {% if product.gallery.all %}
     <section class="container mb-4">
