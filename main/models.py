@@ -31,7 +31,7 @@ class Product(models.Model):
         "Серійний номер", max_length=100, blank=True, default="->"
     )
     warranty_months = models.PositiveIntegerField(
-        "Гарантія (24 міс.)", default=24
+        "Гарантія (12 міс.)", default=12
     )
 
     def __str__(self):
