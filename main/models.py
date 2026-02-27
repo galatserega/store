@@ -28,7 +28,7 @@ class Product(models.Model):
         Category, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     serial_number = models.CharField(
-        "Серійний номер", max_length=100, blank=True, default="->"
+        "Серійний номер", max_length=100, blank=True, default=""
     )
     warranty_months = models.PositiveIntegerField(
         "Гарантія (12 міс.)", default=12
